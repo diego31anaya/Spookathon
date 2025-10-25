@@ -1,7 +1,7 @@
 import { View, Text, Pressable, StyleSheet } from 'react-native'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { CameraView, CameraType, useCameraPermissions } from 'expo-camera';
-
+import { useFocusEffect, useRouter } from 'expo-router';
 
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 
@@ -9,7 +9,9 @@ const App = () => {
   const [facing, setFacing] = useState('back');
   const [permission, requestPermission] = useCameraPermissions();
   const [flashOn, setFlashOn] = useState(false)
-  const [scanned, setScanned] = useState(false); // ✅ added
+  const [scanned, setScanned] = useState(false);
+  const scannedRef = useRef(false);
+  const router = useRouter();
 
   useEffect(() => {
     if (!permission) return;
@@ -18,15 +20,18 @@ const App = () => {
     }
   }, [permission]);
 
+  useFocusEffect(() => {
+    setScanned(false);
+    scannedRef.current = false;
+  })
+
   if (!permission) {
     return <View/>
   }
 
   if (!permission.granted) {
     return (
-      <View>
-        
-      </View>
+      <View/>
     )
   }
 
@@ -36,6 +41,11 @@ const App = () => {
   }
 
   const handleBarCodeScanned =  async ({type, data}) => {
+
+    if (scannedRef.current) return;
+    scannedRef.current = true;
+    setScanned(true);
+
     try {
       const response = await fetch(`https://world.openfoodfacts.org/api/v0/product/${data}.json`);
       const result = await response.json();
@@ -43,17 +53,26 @@ const App = () => {
       if (result.status === 1) {
         const product = result.product;
         console.log('Product found:', product.product_name);
-        console.log('Brand:', product.brands);
-        console.log('Calories (100g):', product.nutriments['energy-kcal_100g']);
+
+        router.push({
+          pathname: `/product/${data}`,
+          params: { name: product.product_name },
+        });
+
+        // console.log('Brand:', product.brands);
+        // console.log('Calories (100g):', product.nutriments['energy-kcal_100g']);
+
       } else {
         console.log('Product not found');
+        scannedRef.current = false;
+        setScanned(false);
       }
 
     } catch (error) {
       console.error('Error fetching product info:', error)
+      scannedRef.current = false;
+      setScanned(false);
     }
-
-    setScanned(false);
   }
 
   return (

@@ -21,10 +21,10 @@ export default function TabLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Home',
+          title: 'Scan',
           tabBarIcon: ({ color }) => <MaterialCommunityIcons name="barcode-scan" size={24} color="white" />,
         }}
-      />=
+      />
     </Tabs>
   );
 }
