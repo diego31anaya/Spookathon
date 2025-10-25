@@ -1,10 +1,12 @@
-import { View, Text, Pressable, StyleSheet } from 'react-native'
-import { useState, useEffect } from 'react'
-import { CameraView, CameraType, useCameraPermissions } from 'expo-camera';
+import { CameraView, useCameraPermissions } from 'expo-camera';
+import { useRouter } from 'expo-router';
+import { useEffect, useState } from 'react';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 
 const App = () => {
+  const router = useRouter();
   const [facing, setFacing] = useState('back');
   const [permission, requestPermission] = useCameraPermissions();
   const [flashOn, setFlashOn] = useState(false)
@@ -40,8 +42,20 @@ const App = () => {
         <MaterialIcons name="flashlight-on" size={24} 
         color= {flashOn ? 'black' : 'white'} />
       </Pressable>
+      <Pressable style={styles.navButton} onPress={() => router.push('/history')}>
+  <Text style={styles.navText}>History</Text>
+</Pressable>
+
+      <Pressable style={styles.navButton} onPress={() => router.push('/expiration')}>
+        <Text style={styles.navText}>Expiration</Text>
+      </Pressable>
+
+      <Pressable style={styles.navButton} onPress={() => router.push('/expiration')}>
+        <Text style={styles.navText}>Expiration</Text>
+      </Pressable>
 
     </View>
+    
   )
 }
 
@@ -55,5 +69,20 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     paddingHorizontal: 12,
     borderRadius: 16,
-  }
+  },
+
+  navButton: {
+  position: 'absolute',
+  bottom: 40,
+  left: 20,
+  backgroundColor: '#000000aa',
+  paddingVertical: 10,
+  paddingHorizontal: 16,
+  borderRadius: 8,
+  marginBottom: 10,
+},
+navText: {
+  color: '#fff',
+  fontSize: 16,
+}
 })
