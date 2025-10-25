@@ -42,15 +42,12 @@ const App = () => {
         <MaterialIcons name="flashlight-on" size={24} 
         color= {flashOn ? 'black' : 'white'} />
       </Pressable>
-      <Pressable style={styles.navButton} onPress={() => router.push('/history')}>
-  <Text style={styles.navText}>History</Text>
-</Pressable>
 
-      <Pressable style={styles.navButton} onPress={() => router.push('/expiration')}>
-        <Text style={styles.navText}>Expiration</Text>
+      <Pressable style={[styles.navButton, { left: 20, bottom: 40 }]} onPress={() => router.push('/history')}>
+        <Text style={styles.navText}>History</Text>
       </Pressable>
 
-      <Pressable style={styles.navButton} onPress={() => router.push('/expiration')}>
+      <Pressable style={[styles.navButton, { right: 20, bottom: 40 }]} onPress={() => router.push('/expiration')}>
         <Text style={styles.navText}>Expiration</Text>
       </Pressable>
 
@@ -73,8 +70,6 @@ const styles = StyleSheet.create({
 
   navButton: {
   position: 'absolute',
-  bottom: 40,
-  left: 20,
   backgroundColor: '#000000aa',
   paddingVertical: 10,
   paddingHorizontal: 16,
