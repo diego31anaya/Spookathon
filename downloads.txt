@@ -1,1 +1,2 @@
 npx expo install expo-camera
+npx expo install expo-blur
