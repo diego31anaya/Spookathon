@@ -37,7 +37,7 @@ export default function TabLayout() {
         name="supplements"
         options={{
           title: 'Supplements',
-          tabBarIcon: ({ color }) => <MaterialCommunityIcons name="barcode-scan" size={24} color='rgb(96,48,145)' />,
+          tabBarIcon: ({ color }) => <MaterialCommunityIcons name="pill" size={24} color='rgb(96,48,145)' />,
         }}
       />
       
