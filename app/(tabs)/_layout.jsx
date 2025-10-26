@@ -7,6 +7,7 @@ import { Colors } from '@/constants/theme';
 import { useColorScheme } from '@/hooks/use-color-scheme';
 
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
+import Fontisto from '@expo/vector-icons/Fontisto';
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
@@ -18,13 +19,21 @@ export default function TabLayout() {
         headerShown: false,
         tabBarButton: HapticTab,
       }}>
+        <Tabs.Screen
+        name="history"
+        options={{
+          title: 'History',
+          tabBarIcon: ({ color }) => <Fontisto name="history" size={24} color='rgb(96,48,145)' />,
+        }}
+      />
       <Tabs.Screen
         name="index"
         options={{
           title: 'Scan',
-          tabBarIcon: ({ color }) => <MaterialCommunityIcons name="barcode-scan" size={24} color="white" />,
+          tabBarIcon: ({ color }) => <MaterialCommunityIcons name="barcode-scan" size={24} color='rgb(96,48,145)' />,
         }}
       />
+      
     </Tabs>
   );
 }
