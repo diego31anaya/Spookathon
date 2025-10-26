@@ -4,6 +4,8 @@ import {SafeAreaView, SafeAreaProvider} from 'react-native-safe-area-context';
 import { scannedItems } from '../../data/data';
 import { useRouter } from 'expo-router';
 
+import BG from '../../assets/images/healthByteBackground.png';
+
   const Item = ({ title, image, onPress }) => (
     <Pressable style={styles.item} onPress={onPress}>
     {image ? (
@@ -39,23 +41,29 @@ const History = () => {
         calories: item.calories,
         sugar: item.sugar,
         carbs: item.carbs,
+        badIngredients: JSON.stringify(item.badIngredients || []),
       },
     });
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <Text style={[{fontSize: 24}, {marginHorizontal: 16,}, {fontWeight: 'bold'}, {borderBottomWidth: 1},]}>History</Text>
-        <FlatList 
-            data={scannedItems}
-            renderItem={({ item }) => <Item 
-            title={item.name}
-            image={item.image}
-            onPress={() => handlePress(item)} 
-            />}
-            keyExtractor={(item, index) => item.barcode || index.toString()}
-        /> 
-    </SafeAreaView>
+    <View style={{ flex: 1 }}>
+      {/* Fixed background image (doesn't move when list scrolls) */}
+      <Image source={BG} style={styles.bgImage} resizeMode="cover" />
+
+      <SafeAreaView style={styles.container}>
+        <Text style={[{fontSize: 24}, {marginHorizontal: 16,}, {fontWeight: 'bold'}, {borderBottomWidth: 1}, {color: 'rgb(255,255,255)'}, {borderBottomColor: 'white'}]}>History</Text>
+          <FlatList 
+              data={scannedItems}
+              renderItem={({ item }) => <Item 
+              title={item.name}
+              image={item.image}
+              onPress={() => handlePress(item)} 
+              />}
+              keyExtractor={(item, index) => item.barcode || index.toString()}
+          /> 
+      </SafeAreaView>
+    </View>
   )
 }
 
@@ -64,7 +72,7 @@ export default History
  const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'rgb(96,48,145)'
+    backgroundColor: 'transparent'
   },
     item: {
         backgroundColor: 'black',
@@ -96,14 +104,13 @@ export default History
         fontWeight: '600',
         flexShrink: 1,
       },
-      emptyContainer: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginTop: 40,
-      },
-      emptyText: {
-        color: '#555',
-        fontSize: 16,
+      bgImage: {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        width: undefined,
+        height: undefined,
       },
 });

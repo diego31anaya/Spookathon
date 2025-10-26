@@ -7,8 +7,21 @@ import React, { useRef, useState, useMemo } from 'react';
 const { height: SCREEN_HEIGHT } = Dimensions.get('window');
 
 export default function ProductPage() {
-  const { barcode, name, image, nutriGrade, protein, calories,sugar, carbs } = useLocalSearchParams();
+  const { barcode, name, image, nutriGrade, protein, calories, sugar, carbs, badIngredients } = useLocalSearchParams();
+
   const router = useRouter()
+
+  const parsedBadIngredients = useMemo(() => {
+    try {
+      return badIngredients ? JSON.parse(badIngredients) : [];
+    } catch {
+      return [];
+    }
+  }, [badIngredients]);
+
+  const badIngredientsList = parsedBadIngredients;
+
+  
 
   const rating = useMemo(() => {
     switch (nutriGrade?.toLowerCase()) {
@@ -58,6 +71,7 @@ export default function ProductPage() {
     })
   ).current;
 
+
   return (
     <View style={styles.container}>
       
@@ -105,6 +119,26 @@ export default function ProductPage() {
                 <Text style={styles.nutritionLabel}>Carbs per serving: {carbs ? `${carbs} grams` : 'N/A'}</Text>
               </View>
               
+        </View>
+
+        <View style={styles.badIngredientsContainer}>
+          <View style={styles.badIngredientsHeader}>
+            <Text style={styles.badIngredientsTitle}>Bad Ingredients</Text>
+          </View>
+
+          {badIngredientsList.length > 0 ? (
+            badIngredientsList.map((item, index) => (
+              <View key={index} style={styles.ingredientRow}>
+                {/* some entries may use "key" instead of "name" */}
+                <Text style={styles.ingredientName}>{item.name || item.key}</Text>
+                <Text style={[styles.ingredientSeverity, { color: item.color }]}>
+                  {item.severity}
+                </Text>
+              </View>
+            ))
+          ) : (
+            <Text style={styles.ingredientNone}>No major red-flag ingredients detected.</Text>
+          )}
         </View>
 
       </Animated.View>
@@ -197,15 +231,48 @@ const styles = StyleSheet.create({
     color: 'rgb(254,244,215)',
     fontSize: 16,
   },
-  nutritionValue: {
-    color: 'rgb(254,244,215)',
-    fontWeight: '500',
-    fontSize: 16,
-  },
   nutritionRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginVertical: 4,
+  },
+  badIngredientsContainer: {
+    backgroundColor: 'black',
+    borderRadius: 12,
+    padding: 16,
+    marginTop: 16,
+    marginHorizontal: 20,
+  },
+  badIngredientsHeader: {
+    borderBottomColor: 'rgba(255,255,255,0.2)',
+    borderBottomWidth: 1,
+    paddingBottom: 6,
+    marginBottom: 8,
+  },
+  badIngredientsTitle: {
+    color: 'rgb(254,244,215)',
+    fontWeight: 'bold',
+    fontSize: 16,
+  },
+  ingredientRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginVertical: 4,
+  },
+  ingredientName: {
+    color: 'rgb(254,244,215)',
+    fontSize: 15,
+  },
+  ingredientSeverity: {
+    fontSize: 15,
+    fontWeight: 'bold',
+  },
+  ingredientNone: {
+    color: 'rgba(255,255,255,0.6)',
+    fontStyle: 'italic',
+    textAlign: 'center',
+    marginTop: 8,
   },
 });
 
